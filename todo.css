@@ -77,3 +77,22 @@ ul li {
     max-height: 400px; /* Adjust this height as needed */
     overflow-y: auto;
 }
+footer {
+    background-color: #1F0812;
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    /* z-index: 1000; */
+}
+
+footer a {
+    color: #E4959E;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
