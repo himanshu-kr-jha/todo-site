@@ -1,0 +1,24 @@
+{
+  "name": "todosite",
+  "version": "1.0.0",
+  "description": "this is todosite",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himanshu-kr-jha/todo-site.git"
+  },
+  "author": "himanshukumarjha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/himanshu-kr-jha/todo-site/issues"
+  },
+  "homepage": "https://github.com/himanshu-kr-jha/todo-site#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "path": "^0.12.7"
+  }
+}
