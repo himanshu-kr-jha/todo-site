@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo list</title>
+</head>
+<body>
+    <h1>Todo app</h1>
+    <h2>Welcome, <%= data.username %></h2>
+    <form action="/addtask/<%= data.id %>" method="post">
+        <input type="text" name="task" id="task">
+        <button>Add task</button>
+    </form>
+</body>
+</html>
