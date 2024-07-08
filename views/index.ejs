@@ -3,14 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo list</title>
+    <title>Todo List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts - Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Todo app</h1>
-    <h2>Welcome, <%= data.username %></h2>
-    <form action="/addtask/<%= data.id %>" method="post">
-        <input type="text" name="task" id="task">
-        <button>Add task</button>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Todo List</h1>
+        <h2 class="mb-3">Welcome, <%= data.username %></h2>
+        <h3>Your ID: <%= id %> </h3>
+        <form action="/addtask/<%= id %>" method="post" class="mb-4">
+            <div class="form-group">
+                <label for="task">Add a Task:</label>
+                <input type="text" class="form-control" id="task" name="task" placeholder="Enter your task here" required>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Task</button>  
+        </form>
+
+        <h3>Total Tasks:</h3>
+        <% if (data.length != 0) { %>
+            <ul class="list-group mb-4">
+                <% data.forEach(item => { %>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <%= item.task %>
+                        <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=DELETE" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                        </form>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p>No tasks found.</p>
+        <% } %>
+
+    </div>
+    <!-- Example of a logout link in index.ejs or any relevant template -->
+    <form action="/logout" method="get">
+        <button class="btn btn-danger">Logout</button>
     </form>
+
+
+    <!-- Bootstrap JS (optional, for components like modals) -->
+     <script src="app.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
