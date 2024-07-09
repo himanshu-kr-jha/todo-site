@@ -1,37 +1,47 @@
-/* Custom styles for your todo app */
-
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
+}
+
+.task-content {
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-input {
+    max-width: 70%;
+    display: inline-block;
+}
+
+.edit-form {
+    display: inline-flex;
+    align-items: center;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-btn, .cancel-btn {
+    margin-left: 5px;
 }
 
 .container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+h1, h3 {
+    font-weight: bold;
 }
 
-.btn-primary:hover {
-    background-color: #0069d9;
-    border-color: #0062cc;
+h2 span {
+    font-weight: bold;
 }
 
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-}
-
-.text-primary {
-    color: #007bff;
+.dark-theme {
+    background-color: #343a40; /* Dark mode background color */
+    color: #fff; /* Dark mode text color */
 }

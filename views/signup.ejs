@@ -6,6 +6,7 @@
     <title>Sign Up - Todo</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/styles.css">
 </head>
@@ -30,6 +31,17 @@
     </div>
 
     <!-- Bootstrap JS (optional, for components like modals) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4..5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.createElement('button');
+            toggleButton.innerHTML = '<i class="fas fa-adjust"></i> Toggle Dark Mode';
+            toggleButton.classList.add('btn', 'btn-dark', 'fixed-top', 'm-2');
+            toggleButton.onclick = function () {
+                document.body.classList.toggle('dark-theme');
+            }
+            document.body.appendChild(toggleButton);
+        });
+    </script>
 </body>
 </html>

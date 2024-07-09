@@ -8,9 +8,40 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/styles.css">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts - Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <!-- Dark Mode CSS -->
+    <style>
+        body {
+            background-color: #fff; /* Light mode background color */
+            color: #343a40; /* Light mode text color */
+            font-family: 'Roboto', sans-serif; /* Use Roboto font */
+            padding-top: 20px; /* Optional: Adjust padding for better layout */
+        }
+
+        .container {
+            max-width: 600px; /* Optional: Adjust container width */
+            margin: 0 auto;
+        }
+
+        .btn-primary, .btn-success {
+            filter: brightness(100%); /* Default brightness for buttons */
+        }
+
+        .btn-primary:hover, .btn-success:hover {
+            filter: brightness(85%); /* Reduce brightness on hover */
+        }
+
+        .dark-theme {
+            background-color: #343a40; /* Dark mode background color */
+            color: #fff; /* Dark mode text color */
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-5 text-center">
         <h1>Welcome to your Todo App!</h1>
         <h2>We are a family of <span class="text-primary"><%= count %></span> users.</h2>
         
@@ -25,5 +56,17 @@
 
     <!-- Bootstrap JS (optional, for components like modals) -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.createElement('button');
+            toggleButton.innerHTML = '<i class="fas fa-adjust"></i> Toggle Dark Mode';
+            toggleButton.classList.add('btn', 'btn-dark', 'fixed-top', 'm-2');
+            toggleButton.onclick = function () {
+                document.body.classList.toggle('dark-theme');
+            }
+            document.body.appendChild(toggleButton);
+        });
+    </script>
 </body>
 </html>

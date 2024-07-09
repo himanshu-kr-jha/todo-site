@@ -134,14 +134,30 @@ app.get("/user/task/:id", (req, res) => {
     if (!req.session.userId || req.session.userId !== id) {
         return res.redirect("/signin"); // Redirect to signin if session is not valid
     }
-
+    let name;
+    let searchQ = `SELECT username FROM user WHERE id='${id}';`;
+    try {
+        connection.query(searchQ, (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            if (result.length !== 0) {
+                let username = result[0].username;
+                name=username;
+            } else {
+                res.send("No such record");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Wrong username or password.");
+    }
     let searchq = `SELECT taskid, task FROM tasks WHERE id='${id}' AND status=false ORDER BY time DESC;`;
     try {
         connection.query(searchq, (err, result) => {
             if (err) throw err;
             console.log(result);
             let data = result;
-            res.render("index", { data, id });
+            res.render("index", { data, id,name });
         });
     } catch (err) {
         console.log(err);
@@ -184,6 +200,23 @@ app.delete("/user/task/:id/:taskid", (req, res) => {
     }
 });
 
+//edit
+app.patch("/user/task/:id/:taskid",(req,res)=>{
+    let {id,taskid}=req.params;
+    let{task}=req.body;
+    let updateQuery = `UPDATE tasks SET task='${task.replace(/'/g, "''")}' WHERE id='${id}' AND taskid='${taskid}';`;
+
+    try {
+        connection.query(updateQuery, (err, result) => {
+            if (err) throw err;
+            console.log("updated task successfully");
+            res.redirect(`/user/task/${id}`);
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Error deleting task.");
+    }
+});
 // Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
@@ -196,7 +229,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`App is listening on port ${PORT}`);
 });
