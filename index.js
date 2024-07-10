@@ -257,13 +257,15 @@ app.get("/user/task/:id", (req, res) => {
         console.log(err);
         res.send("Wrong username or password.");
     }
-    let searchq = `SELECT taskid ,task ,time FROM tasks WHERE id='${id}' AND status=false ORDER BY time;`;
+    let searchq = `SELECT taskid ,task ,time,status FROM tasks WHERE id='${id}'and status=0 ORDER BY time DESC;`;
     try {
         connection.query(searchq, (err, result) => {
             if (err) throw err;
             console.log(result);
             let data = result;
-            // console.log(data[0].time);
+            data.forEach(item => {
+                console.log(item.status);
+            });
             
             res.render("index", { data, id,name });
         });
@@ -325,6 +327,27 @@ app.patch("/user/task/:id/:taskid",(req,res)=>{
         res.send("Error deleting task.");
     }
 });
+
+app.get("/user/:id/complete",(req,res)=>{
+    let {id}=req.params;
+    let searchq = `SELECT taskid ,task ,time,status FROM tasks WHERE id='${id}'and status =1 ORDER BY time;`;
+    try {
+        connection.query(searchq, (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            let data = result;
+            data.forEach(item => {
+                console.log(item.status);
+            });
+            
+            res.render("completed", { data, id});
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Error retrieving tasks.");
+    }
+    // res.send("at completed task page.")
+})
 // Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {
@@ -335,6 +358,7 @@ app.get('/logout', (req, res) => {
         res.redirect('/'); // Redirect to home page or login page after logout
     });
 });
+
 
 // Start server
 const PORT = process.env.PORT || 8080;

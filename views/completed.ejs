@@ -76,7 +76,7 @@
 <body>
     
     <div class="container mt-5">
-        <h2 class="mb-3">Welcome, <%= name %></h2>
+        <h2 class="mb-3">Welcome</h2>
         <!-- Logout Button -->
         <form action="/logout" method="get" class="logout-button">
             <button class="btn btn-danger">Logout</button>
@@ -90,8 +90,8 @@
             </div>
             <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Task</button>
         </form>
-        <form action="/user/<%= id %>/complete" method="get">
-            <button class="btn btn-outline-info info-btn">Completed task</button>
+        <form action="/user/task/<%= id %>" method="get">
+            <button class="btn btn-outline-info info-btn">To be completed</button>
         </form>
         <h3>This is what you need to do today:</h3>
         <div class="task-list-container">
