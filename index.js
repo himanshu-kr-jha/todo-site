@@ -9,6 +9,33 @@ const crypto = require('crypto');
 
 // Generate a secret key for session
 const secret = crypto.randomBytes(32).toString('hex');
+function timeAgo(timestamp) {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diff = now - time;
+
+    const msPerMinute = 60 * 1000;
+    const msPerHour = msPerMinute * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerMonth = msPerDay * 30;
+    const msPerYear = msPerDay * 365;
+
+    if (diff < msPerMinute) {
+        return Math.round(diff / 1000) + ' seconds ago';
+    } else if (diff < msPerHour) {
+        return Math.round(diff / msPerMinute) + ' minutes ago';
+    } else if (diff < msPerDay) {
+        return Math.round(diff / msPerHour) + ' hours ago';
+    } else if (diff < msPerMonth) {
+        return Math.round(diff / msPerDay) + ' days ago';
+    } else if (diff < msPerYear) {
+        return Math.round(diff / msPerMonth) + ' months ago';
+    } else {
+        return Math.round(diff / msPerYear) + ' years ago';
+    }
+}
+
+// Example usage:
 
 // Function to format date
 function getFormattedDate() {
@@ -81,7 +108,86 @@ app.get("/", (req, res) => {
         console.log(err);
     }
 });
+app.get("/users", (req, res) => {
+    let query = 'select * from user order by username;';
+    try {
+        connection.query(query, (err, users) => {
+            if (err) throw err;
+            res.render("users", { users });
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+app.get("/users/:id/edit", (req, res) => {
+    let { id } = req.params;
+    let query = `SELECT * FROM user WHERE id='${id}';`;
+    try {
+        connection.query(query, (err, result) => {
+            if (err) throw err;
+            res.render("edit", { result: result[0] });
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
 
+app.patch("/users/:id", (req, res) => {
+    let { id } = req.params;
+    let { username, password } = req.body;
+    let query = `SELECT * FROM user WHERE id='${id}';`;
+    try {
+        connection.query(query, (err, result) => {
+            if (err) throw err;
+            if (password === result[0].password) {
+                let updateQuery = `UPDATE user SET username='${username}' WHERE id='${id}';`;
+                connection.query(updateQuery, (err, updateResult) => {
+                    if (err) throw err;
+                    res.redirect('/users');
+                });
+            } else {
+                res.send("Wrong password");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.get("/users/:id/delete", (req, res) => {
+    let { id } = req.params;
+    let query = `SELECT * FROM user WHERE id='${id}';`;
+    try {
+        connection.query(query, (err, result) => {
+            if (err) throw err;
+            res.render("delete", { result: result[0] });
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+app.delete("/users/:id", (req, res) => {
+    let { id } = req.params;
+    let { password } = req.body;
+    let query = `SELECT * FROM user WHERE id='${id}';`;
+    try {
+        connection.query(query, (err, result) => {
+            if (err) throw err;
+            if (password === result[0].password) {
+                let deleteQuery = `DELETE FROM user WHERE id='${id}';`;
+                connection.query(deleteQuery, (err, deleteResult) => {
+                    if (err) throw err;
+                    res.redirect('/users');
+                });
+            } else {
+                res.send("Wrong password");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
 // Signup route
 app.get("/signup", (req, res) => {
     res.render("signup");
@@ -151,12 +257,14 @@ app.get("/user/task/:id", (req, res) => {
         console.log(err);
         res.send("Wrong username or password.");
     }
-    let searchq = `SELECT taskid, task FROM tasks WHERE id='${id}' AND status=false ORDER BY time DESC;`;
+    let searchq = `SELECT taskid ,task ,time FROM tasks WHERE id='${id}' AND status=false ORDER BY time;`;
     try {
         connection.query(searchq, (err, result) => {
             if (err) throw err;
             console.log(result);
             let data = result;
+            // console.log(data[0].time);
+            
             res.render("index", { data, id,name });
         });
     } catch (err) {

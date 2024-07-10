@@ -24,21 +24,25 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
             </div>
             <button type="submit" class="btn btn-primary">Sign In</button>
+            <a href="/" class="btn btn-outline-secondary m-2">Back</a>
         </form>
+        
     </div>
 
-    <!-- Bootstrap JS (optional, for components like modals) -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Toggle Dark Mode Button -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const toggleButton = document.createElement('button');
-            toggleButton.innerHTML = '<i class="fas fa-adjust"></i> Toggle Dark Mode';
-            toggleButton.classList.add('btn', 'btn-dark', 'fixed-top', 'm-2');
+            toggleButton.innerHTML = '<i class="fas fa-adjust"></i>';
+            toggleButton.classList.add('btn', 'btn-dark', 'fixed-top', 'm-2', 'small-toggle-btn');
             toggleButton.onclick = function () {
                 document.body.classList.toggle('dark-theme');
             }
             document.body.appendChild(toggleButton);
         });
     </script>
+
+    <!-- Bootstrap JS (optional, for components like modals) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

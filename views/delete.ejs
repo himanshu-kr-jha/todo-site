@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>You are about to delete the record for @<%= result.username %></h1>
+        <form action="/users/<%= result.id %>?_method=DELETE" method="post">
+            <div class="form-group">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button class="btn btn-danger btn-block">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

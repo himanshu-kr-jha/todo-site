@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users-Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+
+    <style>
+        /* Custom CSS for table data font */
+        table {
+            font-family:'Georgia', 'Times New Roman', 'Times', 'serif' /* Specify your preferred font family */
+        }
+
+        th, td {
+            font-size: 16px; /* Adjust font size as needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><a href="/" class="btn btn-outline-info" >Home</a></h1>
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let user of users) { %>
+                    <tr>
+                        <td><%= user.id %></td>
+                        <td><%= user.username %></td>
+                        <td><%= user.email %></td>
+                        <td>
+                            <form action="/users/<%= user.id %>/edit" method="get">
+                                <button class="btn btn-outline-warning">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/users/<%= user.id %>/delete" method="get">
+                                <button class="btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
