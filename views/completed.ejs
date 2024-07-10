@@ -76,7 +76,7 @@
 <body>
     
     <div class="container mt-5">
-        <h2 class="mb-3">Welcome</h2>
+        <h2 class="mb-3">Hello, <%= name %></h2>
         <!-- Logout Button -->
         <form action="/logout" method="get" class="logout-button">
             <button class="btn btn-danger">Logout</button>
@@ -115,17 +115,17 @@
                                 </button>
                             </form>
                             &nbsp;
-                            <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post" class="d-flex align-items-center w-100">
-                                <span class="task-content flex-grow-1">
-                                    <% if (item.task.length > 110) { %>
-                                        <%= item.task.slice(0, 110) %><br>
-                                        <%= item.task.slice(110, 220) %><br>
-                                        <%= item.task.slice(220) %>
-                                    <% } else { %>
-                                        <%= item.task %>
-                                    <% } %>
-                                </span>
-                                <small class="time-ago"></small>&nbsp;
+                            <span class="task-content flex-grow-1">
+                                <% if (item.task.length > 110) { %>
+                                    <%= item.task.slice(0, 110) %><br>
+                                    <%= item.task.slice(110, 220) %><br>
+                                    <%= item.task.slice(220) %>
+                                <% } else { %>
+                                    <%= item.task %>
+                                <% } %>
+                            </span>
+                            <small class="time-ago"></small>&nbsp;
+                            <!-- <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post" class="d-flex align-items-center w-100">
                                 <input type="text" name="task" value="<%= item.task %>" class="form-control task-input d-none mr-2"/>
                                 <button type="button" class="btn btn-outline-info btn-sm edit-btn mr-2"><i class="fas fa-edit"></i></button>
                                 <button type="submit" class="btn btn-outline-info btn-sm save-btn d-none"><i class="fas fa-save"></i></button>&nbsp;
@@ -133,7 +133,7 @@
                             </form>                                               
                             <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=DELETE" method="post">
                                 <button type="submit" class="btn btn-outline-danger btn-sm delete-btn"><i class="fas fa-trash"></i></button>
-                            </form>
+                            </form> -->
                         </li>
                     <% }); %>
                 </ul>

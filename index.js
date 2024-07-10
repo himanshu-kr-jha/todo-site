@@ -369,8 +369,25 @@ app.patch("/user/task/:id/:taskid",(req,res)=>{
 
 app.get("/user/:id/complete",(req,res)=>{
     let {id}=req.params;
+    let name;
+    let searchQ = `SELECT username FROM user WHERE id='${id}';`;
+    try {
+        connection.query(searchQ, (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            if (result.length !== 0) {
+                let username = result[0].username;
+                name=username;
+            } else {
+                res.send("No such record");
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Wrong username or password.");
+    }
     let countQuery = `SELECT status, COUNT(*) AS count FROM tasks WHERE id='${id}' GROUP BY status;`;
-    const statuslist=count(id);
+    // const statuslist=count(id);
     let s0;
     let s1;
     let total;
@@ -414,7 +431,7 @@ app.get("/user/:id/complete",(req,res)=>{
             let percentage=(s1*100)/total;
             percentage=parseFloat(percentage.toFixed(2));
             console.log("------------------------------"+percentage);
-            res.render("completed", { data, id,percentage});
+            res.render("completed", { data, id,percentage,name});
         });
     } catch (err) {
         console.log(err);
