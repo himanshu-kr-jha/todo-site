@@ -93,12 +93,22 @@
         <form action="/user/<%= id %>/complete" method="get">
             <button class="btn btn-outline-info info-btn">Completed task</button>
         </form>
-        <h3>This is what you need to do today:</h3>
+        <% if (s0>0) { %>
+            <h3>You have to do <b style="font-size: larger;"><%= s0 %></b> tasks today:</h3> 
+        <% } %>
+        
         <div class="task-list-container">
             <% if (data.length !== 0) { %>
                 <ul class="list-group mb-4" id="task-list">
                     <% data.forEach(item => { %>
+                        
                         <li class="list-group-item d-flex justify-content-between align-items-center" data-id="<%= item.taskid %>" data-timestamp="<%= item.time %>"> 
+                            <form id="editForm" action="/task/status1/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post">
+                                <button class="btn btn-outline-info btn-sm check-btn mr-2" onclick="confirmUpdate()">
+                                <i class="fas fa-check"></i> <!-- Use the check icon from Font Awesome -->
+                                </button>
+                            </form>
+                            &nbsp;
                             <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post" class="d-flex align-items-center w-100">
                                 <span class="task-content flex-grow-1">
                                     <% if (item.task.length > 110) { %>
@@ -121,7 +131,8 @@
                         </li>
                     <% }); %>
                 </ul>
-            <% } else { %>
+            <% } else if (s0==0) { %>
+                <h2>Nice !! you are done with all your works.   </h2>
                 <p>No tasks found.</p>
             <% } %>
         </div>
@@ -139,6 +150,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        function confirmUpdate() {
+            if (confirm("Are you sure you want to update?")) {
+                document.getElementById("editForm").submit();
+            } else {
+                // Optionally, you can add code here if the user cancels the action.
+            }
+        }
         function timeAgo(timestamp) {
             const now = new Date();
             const time = new Date(timestamp);

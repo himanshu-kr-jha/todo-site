@@ -9,6 +9,11 @@ const crypto = require('crypto');
 
 // Generate a secret key for session
 const secret = crypto.randomBytes(32).toString('hex');
+
+function count(id) {
+    
+}
+
 function timeAgo(timestamp) {
     const now = new Date();
     const time = new Date(timestamp);
@@ -257,6 +262,41 @@ app.get("/user/task/:id", (req, res) => {
         console.log(err);
         res.send("Wrong username or password.");
     }
+
+    let countQuery = `SELECT status, COUNT(*) AS count FROM tasks WHERE id='${id}' GROUP BY status;`;
+    const statuslist=count(id);
+    let s0;
+    let s1;
+    let total;
+    
+    connection.query(countQuery, (err, result) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log(result);
+        let statusCount = {
+            0: 0,
+            1: 0
+        };
+
+        result.forEach(item => {
+            const status = item.status;
+            const count = item.count;
+
+            if (statusCount[status] !== undefined) {
+                statusCount[status] += count;
+            } else {
+                statusCount[status] = count;
+            }
+        });
+
+        s0=statusCount[0];
+        s1=statusCount[1];
+        total=statusCount[0]+statusCount[1];
+        console.log(s0+" "+s1+" "+total);
+    });
+
     let searchq = `SELECT taskid ,task ,time,status FROM tasks WHERE id='${id}'and status=0 ORDER BY time DESC;`;
     try {
         connection.query(searchq, (err, result) => {
@@ -266,8 +306,7 @@ app.get("/user/task/:id", (req, res) => {
             data.forEach(item => {
                 console.log(item.status);
             });
-            
-            res.render("index", { data, id,name });
+            res.render("index", { data, id,name,s0 });
         });
     } catch (err) {
         console.log(err);
@@ -330,6 +369,39 @@ app.patch("/user/task/:id/:taskid",(req,res)=>{
 
 app.get("/user/:id/complete",(req,res)=>{
     let {id}=req.params;
+    let countQuery = `SELECT status, COUNT(*) AS count FROM tasks WHERE id='${id}' GROUP BY status;`;
+    const statuslist=count(id);
+    let s0;
+    let s1;
+    let total;
+    
+    connection.query(countQuery, (err, result) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        console.log(result);
+        let statusCount = {
+            0: 0,
+            1: 0
+        };
+
+        result.forEach(item => {
+            const status = item.status;
+            const count = item.count;
+
+            if (statusCount[status] !== undefined) {
+                statusCount[status] += count;
+            } else {
+                statusCount[status] = count;
+            }
+        });
+
+        s0=statusCount[0];
+        s1=statusCount[1];
+        total=statusCount[0]+statusCount[1];
+        console.log(s0+" "+s1+" "+total);
+    });
     let searchq = `SELECT taskid ,task ,time,status FROM tasks WHERE id='${id}'and status =1 ORDER BY time;`;
     try {
         connection.query(searchq, (err, result) => {
@@ -339,15 +411,49 @@ app.get("/user/:id/complete",(req,res)=>{
             data.forEach(item => {
                 console.log(item.status);
             });
-            
-            res.render("completed", { data, id});
+            let percentage=(s1*100)/total;
+            percentage=parseFloat(percentage.toFixed(2));
+            console.log("------------------------------"+percentage);
+            res.render("completed", { data, id,percentage});
         });
     } catch (err) {
         console.log(err);
         res.send("Error retrieving tasks.");
     }
     // res.send("at completed task page.")
-})
+});
+
+app.patch("/task/status1/:id/:taskid",(req,res)=>{
+    // res.send("working");
+    let {id,taskid}=req.params;
+    let updateQuery=`update tasks set status=${1} where id='${id}' and taskid='${taskid}';`;
+    try {
+        connection.query(updateQuery, (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.redirect(`/user/task/${id}`);
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Error retrieving tasks.");
+    }
+});
+//
+app.patch("/task/status0/:id/:taskid",(req,res)=>{
+    // res.send("working");
+    let {id,taskid}=req.params;
+    let updateQuery=`update tasks set status=${0} where id='${id}' and taskid='${taskid}';`;
+    try {
+        connection.query(updateQuery, (err, result) => {
+            if (err) throw err;
+            console.log(result);
+            res.redirect(`/user/${id}/complete`);
+        });
+    } catch (err) {
+        console.log(err);
+        res.send("Error retrieving tasks.");
+    }
+});
 // Logout route
 app.get('/logout', (req, res) => {
     req.session.destroy(err => {

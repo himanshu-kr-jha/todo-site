@@ -93,12 +93,28 @@
         <form action="/user/task/<%= id %>" method="get">
             <button class="btn btn-outline-info info-btn">To be completed</button>
         </form>
-        <h3>This is what you need to do today:</h3>
+        <% if (percentage>60) { %>
+            <h3>Brilliant !! you have completed <b style="font-size: larger;"><%= percentage %> %</b> of your work. Way to go !!!</h3> 
+        <%  } else if (percentage<60 && percentage>40) {%>
+            <h3>Good !! only <b style="font-size: larger;"><%= 100-percentage %> %</b> of your work is remaining.</h3> 
+        <% } else { %>
+            <h3>I know you can do more !! Consistency is the way to complete <b style="font-size: larger;"><%= 100-percentage %> %</b> of your work.</h3> 
+        <% }%>
+         
+         
+         
+        
         <div class="task-list-container">
             <% if (data.length !== 0) { %>
                 <ul class="list-group mb-4" id="task-list">
                     <% data.forEach(item => { %>
                         <li class="list-group-item d-flex justify-content-between align-items-center" data-id="<%= item.taskid %>" data-timestamp="<%= item.time %>"> 
+                            <form id="editForm" action="/task/status0/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post">
+                                <button class="btn btn-outline-secondary btn-sm cancel-btn mr-2" onclick="confirmUpdate()">
+                                    <i class="fas fa-times"></i> <!-- Use the check icon from Font Awesome -->
+                                </button>
+                            </form>
+                            &nbsp;
                             <form action="/user/task/<%= id %>/<%= item.taskid %>?_method=PATCH" method="post" class="d-flex align-items-center w-100">
                                 <span class="task-content flex-grow-1">
                                     <% if (item.task.length > 110) { %>
@@ -139,6 +155,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+        function confirmUpdate() {
+            if (confirm("Are you sure you want to update?")) {
+                document.getElementById("editForm").submit();
+            } else {
+                // Optionally, you can add code here if the user cancels the action.
+            }
+        }
         function timeAgo(timestamp) {
             const now = new Date();
             const time = new Date(timestamp);
