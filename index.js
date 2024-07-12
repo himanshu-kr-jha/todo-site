@@ -6,10 +6,19 @@ const mysql = require('mysql2');
 const methodOverride = require("method-override");
 const session = require('express-session');
 const crypto = require('crypto');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI("AIzaSyBPG4YT2HOSf44pl4GaRctn10E87mFZHTM");
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Generate a secret key for session
 const secret = crypto.randomBytes(32).toString('hex');
 
+async function run(prompt) {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = await response.text();
+    return text.replace(/\*/g, '');  // Remove asterisks from the response
+}
 function count(id) {
     
 }
@@ -481,8 +490,24 @@ app.get('/logout', (req, res) => {
         res.redirect('/'); // Redirect to home page or login page after logout
     });
 });
+app.get("/search/:id",(req,res)=>{
+    // res.send("searach with ai");
+    let {id}=req.params;
+    res.render("search.ejs",{id});
+});
 
-
+app.post("/search", async (req, res) => {
+    let { search } = req.body;
+    console.log(search);
+    try {
+        let result = await run(search);
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error processing request");
+    }
+});
 // Start server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

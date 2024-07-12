@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #responseContainer {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #searchForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+
+        #search {
+            width: 80%;
+            max-width: 600px;
+            height: 100px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            font-size: 14px;
+        }
+
+        .user-message {
+            background-color: #e6f7ff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .response-message {
+            background-color: #fff;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #888;
+            position: absolute;
+            bottom: -20px;
+            right: 10px;
+        }
+
+        #responseContainer .message + .message {
+            margin-top: 30px;
+        }
+
+        .back {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/user/task/<%=id%>">
+        <button class="btn btn-outline-secondary back">Back</button>
+    </form>
+    <h1>Search here</h1>
+    <div id="responseContainer"></div>
+    <form id="searchForm">
+        <textarea name="search" id="search" placeholder="Write your questions"></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            const searchValue = document.getElementById("search").value;
+
+            if (searchValue.trim() === "") return;
+
+            addMessage(searchValue, "user-message");
+
+            fetch("/search", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ search: searchValue })
+            })
+            .then(response => response.text())
+            .then(data => {
+                addMessage(data, "response-message");
+            })
+            .catch(error => console.error("Error:", error));
+
+            document.getElementById("search").value = "";
+        });
+
+        function addMessage(text, className) {
+            const container = document.getElementById("responseContainer");
+            const message = document.createElement("div");
+            message.classList.add("message", className);
+            message.textContent = text;
+
+            const timestamp = document.createElement("span");
+            timestamp.classList.add("timestamp");
+            const now = new Date();
+            timestamp.textContent = now.toLocaleTimeString();
+            message.appendChild(timestamp);
+
+            container.appendChild(message);
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>

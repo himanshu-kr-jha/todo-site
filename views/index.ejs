@@ -53,6 +53,10 @@
             top: 10px;
             right: 10px;
         }
+        .aiform{
+            position: relative;
+            left: 92%;
+        }
 
         .list-group-item {
             background-color: #343a40;
@@ -68,7 +72,7 @@
         }
         .info-btn{
             position: absolute;
-            top: 163px;
+            top: 200px;
             right: 10px;
         }
     </style>
@@ -77,6 +81,9 @@
     
     <div class="container mt-5">
         <h2 class="mb-3">Hello, <%= name %></h2>
+        <form action="/search/<%= id%>" method="get" class="aiform ">
+            <button class="btn btn-outline-info">Search AI</button>
+        </form>
         <!-- Logout Button -->
         <form action="/logout" method="get" class="logout-button">
             <button class="btn btn-danger">Logout</button>
